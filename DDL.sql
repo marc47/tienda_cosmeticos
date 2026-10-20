@@ -1,82 +1,102 @@
-create database tienda_cosmeticos;
+CREATE DATABASE IF NOT EXISTS tienda_cosmeticos
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
-use tienda_cosmeticos;
+USE tienda_cosmeticos;
 
-create table Clientes (
-    idCliente int primary key auto_increment,
-    nombre varchar(45) not null,
-    correo varchar(45) not null,
-    direccion varchar(45) not null,
-    telefono varchar(9) not null
+CREATE TABLE IF NOT EXISTS Clientes (
+    idCliente INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) NOT NULL,
+    direccion VARCHAR(150) NOT NULL,
+    telefono VARCHAR(20) NOT NULL
 );
 
-create table Empleados (
-    idEmpleado int primary key auto_increment,
-    nombre varchar(45) not null,
-    puesto varchar(45) not null,
-    fechaContratacion date not null,
-    area varchar(45) not null
+CREATE TABLE IF NOT EXISTS Empleados (
+    idEmpleado INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    puesto VARCHAR(60) NOT NULL,
+    fechaContratacion DATE NOT NULL,
+    area VARCHAR(60) NOT NULL
 );
 
-create table Categorias (
-    idCategoria int primary key auto_increment,
-    nombre varchar(45)
+CREATE TABLE IF NOT EXISTS Categorias (
+    idCategoria INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(60) NOT NULL UNIQUE
 );
 
-create table PedidosVenta (
-    idPedido int primary auto_increment,
-    fecha date not null,
-    cliente_id int not null,
-    empleado_id int not null,
-    total decimal(10,2) not null,
-    foreign key (cliente_id) references Clientes(idCliente),
-    foreign key (empleado_id) references Empleados(idEmpleado)
+CREATE TABLE IF NOT EXISTS Proveedores (
+    idProveedor INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) NOT NULL,
+    direccion VARCHAR(150) NOT NULL,
+    telefono VARCHAR(20) NOT NULL
 );
 
-create table Productos (
-    idProducto int primary key auto_increment,
-    nombre varchar(45) not null,
-    descripcion varchar(45) not null,
-    categoria_id int not null,
-    precio decimal(5,2) not null,
-    stock int not null,
-    foreign key (categoria_id) references Categorias(idCategorias)
+CREATE TABLE IF NOT EXISTS Productos (
+    idProducto INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion VARCHAR(150) NOT NULL,
+    categoria_id INT NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    stock INT NOT NULL,
+    CONSTRAINT fk_productos_categoria
+        FOREIGN KEY (categoria_id) REFERENCES Categorias(idCategoria)
 );
 
-create table CamposAdicionalesProductos (
-    idCamposAdicionales int primary key auto_increment,
-    producto_id int not null,
-    tipo varchar(45) not null,
-    tono varchar(45) not null,
-    fechaExpiracion date not null,
-    tipoPiel varchar(45) not null,
-    componentePrincipal varchar(45) not null,
-    foreign key (producto_id) references Productos(idProducto)
+CREATE TABLE IF NOT EXISTS CamposAdicionalesProductos (
+    idCamposAdicionales INT PRIMARY KEY AUTO_INCREMENT,
+    producto_id INT NOT NULL UNIQUE,
+    tipo VARCHAR(60) NOT NULL,
+    tono VARCHAR(60),
+    fechaExpiracion DATE,
+    tipoPiel VARCHAR(60),
+    componentePrincipal VARCHAR(100),
+    CONSTRAINT fk_campos_adicionales_producto
+        FOREIGN KEY (producto_id) REFERENCES Productos(idProducto)
 );
 
-create table Proveedores (
-    idProveedor int primary key auto_increment,
-    nombre varchar(45) not null,
-    corre varchar(45) not null,
-    direccion varchar(45) not null,
-    telefono varchar(9) not null,
+CREATE TABLE IF NOT EXISTS PedidosVenta (
+    idPedido INT PRIMARY KEY AUTO_INCREMENT,
+    fecha DATE NOT NULL,
+    cliente_id INT NOT NULL,
+    empleado_id INT NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT fk_pedidos_venta_cliente
+        FOREIGN KEY (cliente_id) REFERENCES Clientes(idCliente),
+    CONSTRAINT fk_pedidos_venta_empleado
+        FOREIGN KEY (empleado_id) REFERENCES Empleados(idEmpleado)
 );
 
-create table OrdenesCompra (
-    idOrdenCompra int primary key auto_increment,
-    fecha date not null,
-    proveedor_id int not null,
-    total decimal(10,2) not null,
-    foreign key (proveedor_id) references Proveedores(idProveedor)
+CREATE TABLE IF NOT EXISTS DetallePedidosVenta (
+    idDetallePedido INT PRIMARY KEY AUTO_INCREMENT,
+    producto_id INT NOT NULL,
+    cantidad INT NOT NULL,
+    precioUnitario DECIMAL(10, 2) NOT NULL,
+    pedido_id INT NOT NULL,
+    CONSTRAINT fk_detalle_pedido_producto
+        FOREIGN KEY (producto_id) REFERENCES Productos(idProducto),
+    CONSTRAINT fk_detalle_pedido_pedido
+        FOREIGN KEY (pedido_id) REFERENCES PedidosVenta(idPedido)
 );
 
-create table DetalleOrdenesCompra (
-    idDetalleOrden int primary key auto_increment,
-    producto_id int not null,
-    cantidad int not null,
-    costo decimal(5,2) not null,
-    ordenCompra_id int not null,
-    foreign key (producto_id) references Productos(idProducto),
-    foreign key (ordenCompra_id) references OrdenesCompra(idOrdenCompra)
+CREATE TABLE IF NOT EXISTS OrdenesCompra (
+    idOrdenCompra INT PRIMARY KEY AUTO_INCREMENT,
+    fecha DATE NOT NULL,
+    proveedor_id INT NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT fk_ordenes_compra_proveedor
+        FOREIGN KEY (proveedor_id) REFERENCES Proveedores(idProveedor)
+);
 
+CREATE TABLE IF NOT EXISTS DetalleOrdenesCompra (
+    idDetalleOrden INT PRIMARY KEY AUTO_INCREMENT,
+    producto_id INT NOT NULL,
+    cantidad INT NOT NULL,
+    costo DECIMAL(10, 2) NOT NULL,
+    ordenCompra_id INT NOT NULL,
+    CONSTRAINT fk_detalle_compra_producto
+        FOREIGN KEY (producto_id) REFERENCES Productos(idProducto),
+    CONSTRAINT fk_detalle_compra_orden
+        FOREIGN KEY (ordenCompra_id) REFERENCES OrdenesCompra(idOrdenCompra)
 );
