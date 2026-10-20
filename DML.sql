@@ -26,7 +26,7 @@ INSERT INTO Productos
 (10, 'Set de Brochas',          'Set de cinco brochas para maquillaje', 9, 175.00, 18);
 
 INSERT INTO CamposAdicionalesProductos
-(idCamposAdicionales, producto_id, type, tono, fechaExpiracion, tipoPiel, componentePrincipal) VALUES
+(idCamposAdicionales, producto_id, tipo, tono, fechaExpiracion, tipoPiel, componentePrincipal) VALUES
 (1,  1,  'Maquillaje', 'Beige Natural', '2027-08-15', 'Mixta', 'Dimeticona'),
 (2,  2,  'Maquillaje', 'Rojo Cereza',   '2027-05-20', 'Todo tipo', 'Cera de abeja'),
 (3,  3,  'Facial',     NULL,            '2027-03-10', 'Seca', 'Ácido hialurónico'),
