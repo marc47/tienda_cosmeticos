@@ -12,3 +12,7 @@ Proyecto de práctica en MySQL para diseñar y consultar la base de datos de una
 ## Desarrollo y ejecución
 
 El esquema se plantea en el modelo entidad-relación y se implementa en `DDL.sql`. Después se cargan los datos de prueba con `DML.sql` y se prueban consultas de lectura en `DQL.sql`. Para ejecutarlo, abre los archivos en MySQL Workbench y ejecútalos en ese orden. `DML.sql` está pensado para cargarse una sola vez en la base de datos para evitar insertar de nuevo los mismos identificadores.
+
+## Diagrama
+
+![Diagrama](./ERUML.png)
