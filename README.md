@@ -16,3 +16,10 @@ El esquema se plantea en el modelo entidad-relación y se implementa en `DDL.sql
 ## Diagrama
 
 ![Diagrama](./ERUML.png)
+
+
+
+Participantes de Grupo
+
+- Kevin Chavez
+- Marco Contreras
